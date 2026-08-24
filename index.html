@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>墨閣 · Ink Loft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ======== 設計 token:三態紙感 ======== */
+:root,body[data-mode="paper"]{
+  --bg:#f7f3e9; --bg2:#efe8da; --bg3:#e7decc;
+  --ink:#2b2620; --dim:#7c7266; --hair:#d8cdb8;
+  --accent:#a63b2a; --gold:#a98230; --card:#fffdf6;
+}
+body[data-mode="sepia"]{
+  --bg:#f4ecd6; --bg2:#ebdfc2; --bg3:#e0d2ae;
+  --ink:#4a3d24; --dim:#8a7c5e; --hair:#d6c7a4;
+  --accent:#8f4a2a; --gold:#9a7b34; --card:#fbf4e4;
+}
+body[data-mode="slate"]{
+  --bg:#14161b; --bg2:#1a1d24; --bg3:#21252e;
+  --ink:#e8e3d8; --dim:#a9a194; --hair:#373c46;
+  --accent:#d07b5a; --gold:#c9a458; --card:#1e2129;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:ui-sans-serif,system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+  min-height:100vh;line-height:1.6;transition:background .3s,color .3s;
+}
+.serif,.brand,.reader h1{font-family:"Noto Serif SC","Songti SC","SimSun",serif}
+a{color:inherit;text-decoration:none}
+
+/* ======== 頂欄 ======== */
+.topbar{
+  position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:18px;
+  padding:14px 22px;background:color-mix(in srgb,var(--bg) 84%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--hair);
+}
+.brand{font-size:19px;font-weight:700;letter-spacing:3px}
+.brand em{color:var(--accent);font-style:normal}
+.spacer{flex:1}
+.modegap{display:flex;gap:4px}
+.modebtn{border:1px solid var(--hair);background:transparent;color:var(--dim);
+  padding:5px 11px;border-radius:999px;font-size:12px;cursor:pointer;transition:.15s}
+.modebtn.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+@media(prefers-reduced-motion:reduce){body,.modebtn,a{transition:none}}
+
+/* ======== 組件 ======== */
+.wrap{max-width:940px;margin:0 auto;padding:0 22px}
+.hairline{height:3px;background:var(--accent);width:0;position:fixed;top:0;left:0;z-index:30}
+.backlink{display:inline-block;margin:26px 4px 0;color:var(--dim);font-size:13px}
+.backlink:hover{color:var(--accent)}
+.chip{display:inline-block;padding:2px 10px;border:1px solid var(--hair);border-radius:999px;
+  font-size:11.5px;color:var(--dim)}
+.chip.live{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.dim{color:var(--dim)}
+
+/* hero */
+.hero{padding:72px 0 34px}
+.hero h1{font-size:clamp(30px,5vw,52px);margin:0 0 26px;letter-spacing:2px;
+  line-height:1.25;font-weight:600}
+.hero .tag{font-size:15px;color:var(--dim);max-width:46ch;line-height:1.9}
+
+/* 續讀卡 */
+.resume{margin:30px 0 46px;background:var(--card);border:1px solid var(--hair);
+  border-radius:14px;padding:26px 30px;display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.resume .lbl{font-size:12px;color:var(--dim);letter-spacing:1px}
+.resume h2{margin:2px 0 10px;font-size:22px}
+.resume .pbar{height:6px;background:var(--hair);border-radius:4px;overflow:hidden;flex:1;min-width:170px}
+.resume .pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:4px}
+.resume .pct{font-size:13px;color:var(--dim)}
+.cta{background:var(--ink);color:var(--bg);border:none;border-radius:9px;
+  padding:11px 22px;font-size:14px;cursor:pointer}
+
+/* 作品卡格 */
+.sec-h{font-size:13px;letter-spacing:2px;color:var(--dim);margin:10px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;padding-bottom:70px}
+.card{background:var(--card);border:1px solid var(--hair);border-radius:14px;overflow:hidden;
+  transition:transform .18s ease,box-shadow .18s ease;cursor:pointer}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.12)}
+.cover{aspect-ratio:16/9;display:flex;align-items:flex-end;padding:14px;
+  background:linear-gradient(160deg,#3a4d3f,#1d2620 70%);filter:saturate(.9)}
+.cover .c-title{color:#f3efe4;font-size:19px;font-weight:600;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.card .meta{padding:14px 16px 16px}
+.card .meta .status{font-size:11px;color:var(--accent);letter-spacing:1px}
+.card .meta h3{margin:4px 0;font-size:17px}
+.card .meta p{margin:0;font-size:13px;color:var(--dim);line-height:1.7}
+
+/* 作品頁 */
+.cover-banner{position:relative;overflow:hidden;border-radius:16px;margin:26px 0 0;
+  min-height:230px;display:flex;flex-direction:column;justify-content:flex-end;padding:30px;
+  background:linear-gradient(165deg,color-mix(in srgb,var(--accent) 18%,var(--bg2)),#232a22 90%)}
+.cover-banner h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)}
+.cover-banner .tagline{font-size:14px;color:color-mix(in srgb,var(--ink) 78%,transparent);max-width:52ch;line-height:1.8}
+.toc{margin:34px 0 20px;border-top:1px solid var(--hair);padding-top:22px}
+.toc .row{display:flex;gap:16px;align-items:baseline;padding:13px 6px;border-bottom:1px solid var(--hair);cursor:pointer;border-radius:6px}
+.toc .row:hover{background:var(--bg2)}
+.toc .row.no{min-width:34px;color:var(--accent);font-family:"Noto Serif SC",serif;font-size:19px}
+.toc .row .t{font-size:16px;font-family:"Noto Serif SC",serif}
+.toc .row.cur .t{color:var(--accent)}
+.toc .row .w{margin-left:auto;font-size:12px;color:var(--dim)}
+
+/* 閱讀頁 */
+.reader{max-width:680px;margin:30px auto 90px;padding:0 22px}
+.reader .crumb{font-size:12.5px;color:var(--dim);margin-bottom:40px}
+.reader h1{font-size:clamp(26px,4vw,36px);margin:0 0 6px;letter-spacing:1px;font-weight:600}
+.reader .chno{font-size:13px;color:var(--dim);margin-bottom:34px;letter-spacing:2px}
+.reader-body{font-family:"Noto Serif SC","Songti SC",serif;font-size:clamp(17px,1.6vw,19px);
+  line-height:2;letter-spacing:.02em;color:var(--ink)}
+.reader-body p{margin:0 0 1.6em}
+.reader-body .drop::first-letter{
+  font-size:3.1em;float:left;line-height:.9;padding:.04em .12em 0 0;color:var(--accent);font-weight:600}
+.reader-body hr.newscene{border:none;text-align:center;margin:2.4em 0;color:var(--dim)}
+.reader-body hr.newscene::after{content:"◆ ◆ ◆";font-size:12px;letter-spacing:8px;opacity:.7}
+.readnav{display:flex;align-items:center;gap:12px;margin-top:64px;padding-top:26px;border-top:1px solid var(--hair)}
+.readnav button{background:var(--bg2);border:1px solid var(--hair);color:var(--ink);
+  padding:9px 16px;border-radius:9px;cursor:pointer;font-size:13px}
+.readnav button:disabled{opacity:.4;cursor:default}
+.readnav .pos{margin-left:auto;font-size:12px;color:var(--dim)}
+.off{display:none}
+</style>
+</head>
+<body data-mode="auto">
+<div class="hairline" id="progBar"></div>
+<header class="topbar">
+  <div class="brand serif">墨<em>閣</em><span style="opacity:.4;font-size:12px;margin-left:8px;letter-spacing:1px">INK LOFT</span></div>
+  <div class="spacer"></div>
+  <div class="modegap" id="modegap">
+    <button class="modebtn" data-m="paper">紙</button>
+    <button class="modebtn" data-m="sepia">琥珀</button>
+    <button class="modebtn" data-m="slate">石板</button>
+  </div>
+</header>
+
+<main>
+  <!-- 首頁 -->
+  <section id="view-home" class="wrap">
+    <div class="hero">
+      <h1 class="serif">故事,是要<br>慢慢讀的。</h1>
+      <p class="tag">連載小說與短篇的棲身之所。沒有推送,沒有廣告,只有一頁一頁的紙。挑一盞燈,坐下,讀到哪算哪。</p>
+    </div>
+
+    <div class="resume">
+      <div>
+        <div class="lbl">繼續閱讀</div>
+        <h2 class="serif" id="resumeTitle"></h2>
+        <div class="resume .pbar"><div class="pbar"><i id="resumeBar"></i></div></div>
+      </div>
+      <div class="pct serif" id="resumePct"></div>
+      <button class="cta" id="resumeBtn">續讀 →</button>
+    </div>
+
+    <div class="sec-h serif">作品 ―</div>
+    <div class="grid" id="workGrid"></div>
+  </section>
+
+  <!-- 作品頁 -->
+  <section id="view-work" class="wrap off">
+    <a class="backlink" id="btBackHome">← 回首頁</a>
+    <div class="cover-banner">
+      <h1 class="serif" id="wTitle"></h1>
+      <div class="tagline" id="wTag"></div>
+    </div>
+    <div class="toc" id="toc"></div>
+  </section>
+
+  <!-- 閱讀頁 -->
+  <section id="view-reader" class="wrap off">
+    <div class="reader" id="reader">
+      <a class="backlink" id="btBackWork" style="margin:0 0 30px">← 回目錄</a>
+      <div class="crumb" id="rCrumb"></div>
+      <h1 id="rTitle"></h1>
+      <div class="chno" id="rChno"></div>
+      <article class="reader-body" id="rBody"></article>
+      <div class="readnav">
+        <button id="prevCh">← 上一章</button>
+        <button id="nextCh">下一章 →</button>
+        <div class="pos" id="rPos"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+/* ============ 演示內容 ============ */
+let LIB={};
+/* ============ 日期閘 ============ */
+const todayStr=()=>{const d=new Date();const p=n=>String(n).padStart(2,"0");return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate());};
+/* ============ 狀態 ============ */
+let curKey=null, curCh=0, curW=null;
+const view=(v)=>['home','work','reader'].forEach(x=>$('#view-'+x).classList.toggle('off',x!==v));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const prog=()=>JSON.parse(localStorage.getItem('inkloft.progress')||'{"w":"lamp-keeper","c":0}');
+function goHome(){view('home');renderHome();}
+
+function renderHome(){
+  const t=prog(); const ww=LIB[t.w]||Object.values(LIB)[0];
+  const ch=Math.min(t.c,ww.chapters.length-1);
+  const pct=Math.round(ch/(ww.chapters.length-1)*100);
+  $('#resumeTitle').textContent= ww.title+' · 第 '+(ch+1)+' 章';
+  $('#resumeBar').style.width=pct+'%';
+  $('#resumePct').textContent= '讀到 '+(ch+1)+' / '+ww.chapters.length+' 章';
+  $('#resumeBtn').onclick=()=>openReader(t.w,ch);
+  const g=$('#workGrid'); g.innerHTML='';
+  Object.keys(LIB).forEach(k=>{
+    const w=LIB[k]; const d=document.createElement('div'); d.className='card';
+    d.innerHTML='<div class="cover"><div class="c-title serif">'+esc(w.title)+'</div></div>'+
+      '<div class="meta"><span class="status">'+w.status+'</span>'+
+      '<h3 class="serif">'+esc(w.title)+'</h3><p>'+esc(w.tagline)+'</p></div>';
+    const cv=w.cover?d.querySelector('.cover'):null;
+    if(cv){cv.style.backgroundImage='linear-gradient(rgba(8,8,12,.35),rgba(8,8,12,.55)), url('+w.cover+')';cv.style.backgroundSize='cover';cv.style.backgroundPosition='center';}
+    d.onclick=()=>openWork(k); g.appendChild(d);
+  });
+}
+function openWork(k){
+  view('work'); curKey=k; curW=LIB[k];
+  $('#wTitle').textContent=curW.title;
+  $('#wTag').textContent=curW.tagline;
+  const cb=document.querySelector('#view-work .cover-banner');
+  if(curW.cover){cb.style.backgroundImage='linear-gradient(rgba(10,10,14,.5),rgba(10,10,14,.72)), url('+curW.cover+')';cb.style.backgroundSize='cover';cb.style.backgroundPosition='center';}
+  else cb.style.backgroundImage='';
+  const toc=$('#toc'); toc.innerHTML='';
+  curW.chapters.forEach((c,i)=>{
+    const r=document.createElement('div'); r.className='row';
+    r.innerHTML='<span class="no">'+c.n+'</span><span class="t serif">'+esc(c.t)+'</span><span class="w">'+c.w+'</span>';
+    r.onclick=()=>openReader(k,i); toc.appendChild(r);
+  });
+}
+function openReader(k,ci){
+  view('reader'); curKey=k; curW=LIB[k]; curCh=ci;
+  const c=curW.chapters[ci];
+  $('#rCrumb').textContent= curW.title+' · 目錄';
+  $('#rTitle').textContent= c.t;
+  $('#rChno').textContent= '第 '+c.n+' 章';
+  $('#rBody').innerHTML= c.body.map((p,i)=>'<p'+(i===0?' class="drop"':'')+'>'+esc(p)+'</p>').join('<hr class="newscene">');
+  $('#rPos').textContent= (ci+1)+' / '+curW.chapters.length;
+  $('#prevCh').disabled= ci===0;
+  $('#nextCh').disabled= ci===curW.chapters.length-1;
+  localStorage.setItem('inkloft.progress',JSON.stringify({w:k,c:ci}));
+  window.scrollTo(0,0);
+}
+/* ============ 閱讀模式 ============ */
+const MG=$('#modegap');
+function setMode(m){document.body.dataset.mode=m;
+  MG.querySelectorAll('.modebtn').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  localStorage.setItem('inkloft.mode',m);}
+MG.querySelectorAll('.modebtn').forEach(b=>{b.onclick=()=>setMode(b.dataset.m);});
+const saved=localStorage.getItem('inkloft.mode')||(matchMedia('(prefers-color-scheme:dark)').matches?'slate':'paper');
+setMode(saved);
+/* ============ 進度條 === ============ */
+window.addEventListener('scroll',()=>{
+  const d=document.documentElement;
+  const p=d.scrollTop/Math.max(1,d.scrollHeight-d.clientHeight);
+  $('#progBar').style.width=(p*100)+'%';
+},{passive:true});
+/* ============ 鍵盤翻章 ============ */
+window.addEventListener('keydown',e=>{
+  if($('#view-reader').classList.contains('off'))return;
+  if(e.key==='ArrowRight'&&curCh<curW.chapters.length-1)openReader(curKey,curCh+1);
+  if(e.key==='ArrowLeft'&&curCh>0)openReader(curKey,curCh-1);
+});
+/* ============ 按鈕 ============ */
+$('#btBackHome').onclick=goHome;
+$('#btBackWork').onclick=()=>curKey?openWork(curKey):goHome();
+$('#prevCh').onclick=()=>curCh>0&&openReader(curKey,curCh-1);
+$('#nextCh').onclick=()=>curCh<curW.chapters.length-1&&openReader(curKey,curCh+1);
+/* ============ 開 ============ */
+function loadData(){return fetch("data.json",{cache:"no-store"}).then(r=>r.json()).then(d=>{LIB=d;Object.keys(LIB).forEach(k=>{LIB[k].chapters=(LIB[k].chapters||[]).filter(c=>!c.date||c.date<=todayStr());});renderHome();}).catch(()=>renderHome());}
+loadData();
+</script></script>
+</body>
+</html>
