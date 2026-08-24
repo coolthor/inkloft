@@ -60,7 +60,9 @@ a{color:inherit;text-decoration:none}
 .dim{color:var(--dim)}
 
 /* hero */
-.hero{padding:72px 0 34px}
+.hero-vid{margin:0 0 10px;border-radius:16px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.18)}
+.hero-vid video{display:block;width:100%;aspect-ratio:16/9.2;object-fit:cover;background:var(--bg3)}
+.hero{padding:44px 0 34px}
 .hero h1{font-size:clamp(30px,5vw,52px);margin:0 0 26px;letter-spacing:2px;
   line-height:1.25;font-weight:600}
 .hero .tag{font-size:15px;color:var(--dim);max-width:46ch;line-height:1.9}
@@ -139,6 +141,11 @@ a{color:inherit;text-decoration:none}
 <main>
   <!-- 首頁 -->
   <section id="view-home" class="wrap">
+    <div class="hero-vid">
+      <video autoplay muted loop playsinline preload="auto" poster="portraits/cover.png">
+        <source src="media/hero.mp4" type="video/mp4">
+      </video>
+    </div>
     <div class="hero">
       <h1 class="serif">故事,是要<br>慢慢讀的。</h1>
       <p class="tag">連載小說與短篇的棲身之所。沒有推送,沒有廣告,只有一頁一頁的紙。挑一盞燈,坐下,讀到哪算哪。</p>
